@@ -1,0 +1,10 @@
+geometry_msgs/Pose pre_grasp_pose
+geometry_msgs/Pose grasp_pose
+geometry_msgs/Pose pre_place_pose
+geometry_msgs/Pose place_pose
+---
+bool success
+trajectory_msgs/JointTrajectory pre_grasp_trajectory
+trajectory_msgs/JointTrajectory grasp_trajectory
+trajectory_msgs/JointTrajectory pre_place_trajectory
+trajectory_msgs/JointTrajectory place_trajectory

@@ -1,0 +1,6 @@
+geometry_msgs/Pose pre_grasp_pose
+geometry_msgs/Pose grasp_pose
+geometry_msgs/Pose pre_place_pose
+geometry_msgs/Pose place_pose
+---
+bool success

@@ -1,0 +1,42 @@
+{
+    "Registrations": [
+        {
+            "Component": {
+                "Type": "git",
+                "git": {
+                    "RepositoryUrl": "https://github.com/microsoft/MixedRealityToolkit-Unity",
+                    "CommitHash": "b7ffa2cb5a308a94e8daab4f1651f0ea695f2dd3"
+                }
+            },
+            "DevelopmentDependency": true
+        },
+        {
+            "Component": {
+                "Type": "git",
+                "git": {
+                    "repositoryUrl": "https://github.com/Unity-Technologies/ROS-TCP-Connector",
+                    "commitHash": "c27f00c6cf750d2d0564349b3039d19aa3925e7c"
+                }
+            }
+        },
+        {
+            "Component": {
+                "Type": "git",
+                "git": {
+                    "repositoryUrl": "https://github.com/Unity-Technologies/ROS-TCP-Endpoint",
+                    "commitHash": "993d366b8900bf9f3d2da444fde64c0379b4dc7c"
+                }
+            }
+        },
+        {
+            "Component": {
+                "Type": "git",
+                "git": {
+                    "repositoryUrl": "https://github.com/Unity-Technologies/URDF-Importer",
+                    "commitHash": "90f353e4352aae4df52fa2c05e49b804631d2a63"
+                }
+            },
+            "DevelopmentDependency" : true
+        }
+    ]
+}

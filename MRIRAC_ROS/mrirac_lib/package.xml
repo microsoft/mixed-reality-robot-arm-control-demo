@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>mrirac_lib</name>
+  <version>1.0.0</version>
+  <description>The mrirac_lib package</description>
+
+  <maintainer email="hanlonm@ethz.ch">hanlonm</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>kinova_msgs</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <depend>kinova_msgs</depend>
+  <depend>mrirac_msgs</depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <exec_depend>roscpp</exec_depend>
+
+</package>

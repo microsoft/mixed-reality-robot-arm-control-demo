@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>mrirac_pose_correction</name>
+  <version>1.0.0</version>
+  <description>The mrirac pose correction package</description>
+
+  <maintainer email="hanlonm@ethz.ch">hanlonm</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>std_srvs</build_depend>
+  <build_depend>mrirac_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>kinova_msgs</build_depend>
+
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>kinova_msgs</exec_depend>
+  <depend>mrirac_lib</depend>
+
+</package>

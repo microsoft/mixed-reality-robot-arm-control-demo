@@ -1,0 +1,8 @@
+#goal definition
+geometry_msgs/Pose target_pose
+---
+#result definition
+float64 pose_error
+---
+#feedback
+float64 pose_error

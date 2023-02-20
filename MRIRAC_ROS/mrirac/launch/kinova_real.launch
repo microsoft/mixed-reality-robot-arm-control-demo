@@ -1,0 +1,10 @@
+<launch>
+    <include file="$(find kinova_bringup)/launch/kinova_robot.launch"/>
+    <include file="$(find j2n6s300_moveit_config)/launch/j2n6s300_demo.launch"/>
+    <include file="$(find ros_tcp_endpoint)/launch/endpoint.launch"/>
+    <node name="mrirac_trajectory_planner" pkg="mrirac" type="trajectory_planner_node" output="screen" />
+    <node name="mrirac_pose_correction" pkg="mrirac_pose_correction" type="pose_correction_node" output="screen" />
+    <node name="mrirac_pick_and_place" pkg="mrirac_pick_and_place" type="pick_and_place_node" output="screen" />
+    <node name="joint_angle_repub" pkg="topic_tools" type="relay" output="screen"
+        args="/j2n6s300_driver/out/joint_state /j2n6s300/joint_states"/>
+</launch>

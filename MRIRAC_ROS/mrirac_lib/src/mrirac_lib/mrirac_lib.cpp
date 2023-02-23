@@ -128,17 +128,21 @@ void RobotMovements::ExecutePlannedTrajectory(moveit::planning_interface::MoveGr
     ROS_INFO("calling pose correction action");
     mrirac_msgs::PoseCorrectionGoal goal;
     goal.target_pose = target_pose;
-    pose_correction_client.sendGoal(goal);
-    // wait for the action to return
-    bool finished_before_timeout = pose_correction_client.waitForResult(ros::Duration(30.0));
 
-    if (finished_before_timeout)
+    if (use_pose_correction)
     {
-        actionlib::SimpleClientGoalState state = pose_correction_client.getState();
-        ROS_INFO("Action finished: %s", state.toString().c_str());
-    }
-    else
-    {
-        ROS_INFO("Action did not finish before the time out.");
+        pose_correction_client.sendGoal(goal);
+        // wait for the action to return
+        bool finished_before_timeout = pose_correction_client.waitForResult(ros::Duration(30.0));
+
+        if (finished_before_timeout)
+        {
+            actionlib::SimpleClientGoalState state = pose_correction_client.getState();
+            ROS_INFO("Action finished: %s", state.toString().c_str());
+        }
+        else
+        {
+            ROS_INFO("Action did not finish before the time out.");
+        }
     }
 }

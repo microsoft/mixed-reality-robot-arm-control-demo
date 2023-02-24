@@ -46,6 +46,8 @@ private:
   geometry_msgs::Pose pre_grasp_pose_;
   geometry_msgs::Pose grasp_pose_;
 
+  bool simulation;
+
   actionlib::SimpleActionClient<mrirac_msgs::PoseCorrectionAction> pose_correction_action_client_;
 
   bool PlanTrajectory(mrirac_msgs::TrajectoryPlan::Request &req, mrirac_msgs::TrajectoryPlan::Response &res);
@@ -63,10 +65,15 @@ public:
 
 TrajectoryPlannerNode::TrajectoryPlannerNode(const ros::NodeHandle &node_handle) : node_handle_(node_handle), pose_correction_action_client_("/mrirac_pose_correction/pose_correction", true), move_group_interface_(kPlanningGroup_)
 {
-  ROS_INFO("Waiting for action server to start.");
-  // wait for the action server to start
-  pose_correction_action_client_.waitForServer(); // will wait for infinite time
-  ROS_INFO("Action server started");
+  ros::param::param<bool>("~simulation", simulation, false);
+
+  if (!simulation)
+  {
+    ROS_INFO("Waiting for action server to start.");
+    // wait for the action server to start
+    pose_correction_action_client_.waitForServer(); // will wait for infinite time
+    ROS_INFO("Action server started");
+  }
 
   trajectory_server_ = node_handle_.advertiseService("plan_trajectory", &TrajectoryPlannerNode::PlanTrajectory, this);
   execute_server_ = node_handle_.advertiseService("execute_trajectory", &TrajectoryPlannerNode::ExecuteTrajectory, this);
@@ -114,14 +121,14 @@ bool TrajectoryPlannerNode::ExecuteTrajectory(std_srvs::Empty::Request &req, std
 {
   if (trajectory_planned_)
   {
-    RobotMovements::ExecutePlannedTrajectory(move_group_interface_, current_plan_, target_pose_, true, pose_correction_action_client_);
+    RobotMovements::ExecutePlannedTrajectory(move_group_interface_, current_plan_, target_pose_, !simulation, pose_correction_action_client_);
     trajectory_planned_ = false;
   }
   else
   {
     moveit::planning_interface::MoveGroupInterface::Plan motion_plan;
     RobotMovements::PlanMovementToPose(target_pose_, move_group_interface_, motion_plan);
-    RobotMovements::ExecutePlannedTrajectory(move_group_interface_, motion_plan, target_pose_, true, pose_correction_action_client_);
+    RobotMovements::ExecutePlannedTrajectory(move_group_interface_, motion_plan, target_pose_, !simulation, pose_correction_action_client_);
   }
   return true;
 }

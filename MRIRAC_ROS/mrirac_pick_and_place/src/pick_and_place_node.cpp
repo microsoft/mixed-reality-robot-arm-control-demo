@@ -34,6 +34,8 @@ private:
 
     const double kFingerMax_ = 6400;
 
+    bool simulation;
+
     void ExecuteCallback(const mrirac_msgs::PickAndPlaceGoalConstPtr &goal);
     bool Start(mrirac_msgs::StartPickAndPlace::Request &req, mrirac_msgs::StartPickAndPlace::Response &res);
     bool Abort(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res);
@@ -52,6 +54,7 @@ PickAndPlaceNode::PickAndPlaceNode(const std::string &pick_and_place_server_name
                                                                                                                         move_group_interface_(kPlanningGroup_),
                                                                                                                         planner_interface_(kPlanningGroup_)
 {
+    ros::param::param<bool>("~simulation", simulation, false);
     finger_client_ = new actionlib::SimpleActionClient<kinova_msgs::SetFingersPositionAction>("/j2n6s300_driver/fingers_action/finger_positions", false);
     ROS_INFO("starting action server");
     pick_and_place_server_.start();
@@ -158,16 +161,20 @@ bool PickAndPlaceNode::Abort(std_srvs::Empty::Request &req, std_srvs::Empty::Res
 
 void PickAndPlaceNode::ExecuteCallback(const mrirac_msgs::PickAndPlaceGoalConstPtr &goal)
 {
-    RobotMovements::GripperAction(0.0, finger_client_);
+    if (!simulation)
+    {
+        RobotMovements::GripperAction(0.0, finger_client_);
+    }
+
     bool action_success = true;
     if (trajectory_planned_)
     {
-        RobotMovements::ExecutePlannedTrajectory(move_group_interface_, pre_grasp_motion_plan_, goal->pre_grasp_pose, true, pose_correction_client_);
+        RobotMovements::ExecutePlannedTrajectory(move_group_interface_, pre_grasp_motion_plan_, goal->pre_grasp_pose, !simulation, pose_correction_client_);
         trajectory_planned_ = false;
     }
     else
     {
-        action_success = RobotMovements::PickAndPlaceMovement(goal->pre_grasp_pose, move_group_interface_, pick_and_place_server_, true, pose_correction_client_);
+        action_success = RobotMovements::PickAndPlaceMovement(goal->pre_grasp_pose, move_group_interface_, pick_and_place_server_, !simulation, pose_correction_client_);
     }
 
     if (!action_success)
@@ -182,7 +189,7 @@ void PickAndPlaceNode::ExecuteCallback(const mrirac_msgs::PickAndPlaceGoalConstP
     object_ids.push_back("pickObject");
     planning_scene_interface_.removeCollisionObjects(object_ids);
 
-    action_success = RobotMovements::PickAndPlaceMovement(goal->grasp_pose, move_group_interface_, pick_and_place_server_, true, pose_correction_client_);
+    action_success = RobotMovements::PickAndPlaceMovement(goal->grasp_pose, move_group_interface_, pick_and_place_server_, !simulation, pose_correction_client_);
     if (!action_success)
     {
         pick_and_place_result_.success = false;
@@ -192,8 +199,12 @@ void PickAndPlaceNode::ExecuteCallback(const mrirac_msgs::PickAndPlaceGoalConstP
         return;
     }
 
-    RobotMovements::GripperAction(kFingerMax_, finger_client_);
-    action_success = RobotMovements::PickAndPlaceMovement(goal->pre_place_pose, move_group_interface_, pick_and_place_server_, true, pose_correction_client_);
+    if (!simulation)
+    {
+        RobotMovements::GripperAction(kFingerMax_, finger_client_);
+    }
+
+    action_success = RobotMovements::PickAndPlaceMovement(goal->pre_place_pose, move_group_interface_, pick_and_place_server_, !simulation, pose_correction_client_);
     if (!action_success)
     {
         pick_and_place_result_.success = false;
@@ -202,7 +213,7 @@ void PickAndPlaceNode::ExecuteCallback(const mrirac_msgs::PickAndPlaceGoalConstP
         pick_and_place_server_.setAborted(pick_and_place_result_);
         return;
     }
-    action_success = RobotMovements::PickAndPlaceMovement(goal->place_pose, move_group_interface_, pick_and_place_server_, true, pose_correction_client_);
+    action_success = RobotMovements::PickAndPlaceMovement(goal->place_pose, move_group_interface_, pick_and_place_server_, !simulation, pose_correction_client_);
     if (!action_success)
     {
         pick_and_place_result_.success = false;
@@ -212,7 +223,10 @@ void PickAndPlaceNode::ExecuteCallback(const mrirac_msgs::PickAndPlaceGoalConstP
         return;
     }
 
-    RobotMovements::GripperAction(0.0, finger_client_);
+    if (!simulation)
+    {
+        RobotMovements::GripperAction(0.0, finger_client_);
+    }
 
     if (action_success)
     {

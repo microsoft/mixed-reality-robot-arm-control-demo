@@ -58,7 +58,7 @@ cd ~/catkin_ws
 rosdep install --from-paths src --ignore-src -r -y
 ```
 5. Build and source the workspace with `catkin build && source devel/setup.bash`
-6. Test the setup by running `roslaunch mrirac kinova_real.launch` or alternatively (if you don't have a Kinova arm available or setup) you can launch the Gazebo simulation using `roslaunch mrirac kinova_sim.launch`.
+6. Test the setup by running `roslaunch mrirac kinova_real.launch` or alternatively (if you don't have a Kinova arm available or setup) you can launch the Gazebo simulation using `bash MRIRAC_ROS/mrirac/launch_sim.bash`.
  
 If the robot is connected correctly and the setup was successful, you should be able to set a pose goal using the rviz interface and the robot will move to that position once `plan and execute` is pressed.
 
